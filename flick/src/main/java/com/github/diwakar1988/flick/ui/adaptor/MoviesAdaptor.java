@@ -22,14 +22,16 @@ import java.util.List;
  * Created by diwakar.mishra on 10/11/16.
  */
 
-public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MovieViewHolder> implements View.OnClickListener{
+public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MovieViewHolder> {
     private List<Movie>movies;
     private LayoutInflater inflater;
     private Context context;
+    private OnItemClickedListener listener;
     private int orientation;
 
-    public MoviesAdaptor(Context context,int orientation) {
+    public MoviesAdaptor(Context context,OnItemClickedListener listener,int orientation) {
         this.context = context;
+        this.listener = listener;
         this.orientation = orientation;
         this.movies=new ArrayList<>();
         this.inflater=LayoutInflater.from(context);
@@ -41,6 +43,12 @@ public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MovieViewH
         }
         this.movies.addAll(list);
         notifyDataSetChanged();
+    }
+    public void addMovies(List<Movie> list) {
+        if (list!=null){
+            this.movies.addAll(list);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -73,13 +81,13 @@ public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MovieViewH
         if (orientation== Configuration.ORIENTATION_PORTRAIT){
             ivParams= new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    dpToPx(180)
+                    dpToPx(280)
             );
 
         }else{
             ivParams= new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
+                    dpToPx(200)
             );
         }
         iv.setId(R.id.iv_movie_pic);
@@ -130,20 +138,20 @@ public class MoviesAdaptor extends RecyclerView.Adapter<MoviesAdaptor.MovieViewH
         return movies.get(position);
     }
 
-    @Override
-    public void onClick(View v) {
 
-
-    }
-
-    class MovieViewHolder extends RecyclerView.ViewHolder{
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView ivPic;
         public MovieViewHolder(View view) {
             super(view);
-            view.setOnClickListener(MoviesAdaptor.this);
+            view.setOnClickListener(this);
             ivPic = (ImageView) view.findViewById(R.id.iv_movie_pic);
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onItemClicked(v,getAdapterPosition());
         }
     }
     public static int dpToPx(int dp)
