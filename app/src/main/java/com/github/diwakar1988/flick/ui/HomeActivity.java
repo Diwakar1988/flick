@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         rvMoviesGrid.setHasFixedSize(true);
         GridLayoutManager glm = new GridLayoutManager(this,3);
         rvMoviesGrid.setLayoutManager(glm);
-        moviesAdaptor=new MoviesAdaptor(this);
+        moviesAdaptor=new MoviesAdaptor(this,getResources().getConfiguration().orientation);
         rvMoviesGrid.setAdapter(moviesAdaptor);
 
         //we can call this function as per our business requirements
